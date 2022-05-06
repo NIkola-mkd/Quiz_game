@@ -1,12 +1,14 @@
 // api for all categories
 const api_categories = "https://opentdb.com/api_category.php";
+
+// all selectors
 let selectCategory = document.getElementById("category");
 let form = document.getElementById("form");
 let errCategories = document.getElementById("errCategories");
+let start = document.getElementById("start");
 
-// all selectors
-
-// functions
+// ! categories
+window.addEventListener("load", getCategories(api_categories));
 
 // **take data for categories
 async function getCategories(api_categories) {
@@ -27,5 +29,3 @@ async function getCategories(api_categories) {
       errCategories.style.display = "block";
     });
 }
-
-window.addEventListener("load", getCategories(api_categories));
