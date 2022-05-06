@@ -1,5 +1,5 @@
 // api for all categories
-const api_categories = "https://opentdb.com/api_categor.php";
+const api_categories = "https://opentdb.com/api_category.php";
 let selectCategory = document.getElementById("category");
 let form = document.getElementById("form");
 let errCategories = document.getElementById("errCategories");
