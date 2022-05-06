@@ -21,13 +21,27 @@
       <div class="container">
         <div class="row my-5 bg-primary">
           <div class="text-center">
-            <h1 class="text-white">Welcome to the Trivia Quiz Game</h1>
+            <h1 class="text-white" id="welcome">
+              Welcome to the Trivia Quiz Game
+            </h1>
+            <div
+              class="d-flex align-items-center"
+              id="loader"
+              style="display: none !important"
+            >
+              <strong class="text-white">Loading Questions...</strong>
+              <div
+                class="spinner-border ms-auto text-white"
+                role="status"
+                aria-hidden="true"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <!-- results and start game -->
-    <div class="container-fluid">
+    <div class="container-fluid" id="startLayout">
       <div class="container my-3">
         <div class="row">
           <div class="col-lg-3 col-6">
@@ -91,7 +105,9 @@
                   </select>
                   <label for="floatingSelect">Difficulty</label>
                 </div>
-                <button class="btn btn-success my-2" id="start">Start</button>
+                <button class="btn btn-success my-2" id="start" type="submit">
+                  Start
+                </button>
               </form>
             </div>
           </div>
