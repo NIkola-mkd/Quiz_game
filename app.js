@@ -17,6 +17,8 @@ let startLayout = document.getElementById("startLayout");
 let loader = document.getElementById("loader");
 let questions = document.getElementById("questions");
 let history = document.getElementById("history");
+let tryAgain = document.getElementById("tryAgain");
+let reload = document.getElementById("reload");
 
 // score
 let score = 0;
@@ -237,6 +239,10 @@ function gameOver() {
   );
   questions.style.display = "none";
   loader.innerHTML = `<strong class="text-white text-center"> Your score ${score}</strong>`;
+  tryAgain.style.display = "block";
+  reload.addEventListener("click", function (e) {
+    location.reload();
+  });
 }
 
 const items = { ...localStorage };
@@ -254,7 +260,6 @@ function allStorage() {
 }
 
 let historyArr = allStorage(items);
-console.log(historyArr);
 
 for (let i = 0; i < historyArr.length; i++) {
   history.innerHTML += JSON.parse(historyArr[i]);
