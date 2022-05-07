@@ -70,6 +70,17 @@ async function getQuestions(api) {
     })
     .then((data) => {
       loader.style.display = "block";
+      loader.innerHTML = `<div
+                class="d-flex align-items-center"
+                style="display: none !important"
+              >
+                <strong class="text-white">Loading Questions...</strong>
+                <div
+                  class="spinner-border ms-auto text-white"
+                  role="status"
+                  aria-hidden="true"
+                ></div>
+              </div>`;
       welcome.style.display = "none";
       startGame(data["results"]);
     })
