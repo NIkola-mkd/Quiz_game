@@ -15,6 +15,25 @@ let difficulty = document.getElementById("difficulty");
 let welcome = document.getElementById("welcome");
 let startLayout = document.getElementById("startLayout");
 let loader = document.getElementById("loader");
+let questions = document.getElementById("questions");
+
+// score
+let score = 0;
+let questionsArr = [];
+let answersSubmitted = []; //answered questions
+let currentQuestionNumber = 0;
+let answers = [];
+let arrAnsw = []; //shuffled answers
+let answer1 = document.getElementById("answer1");
+let answer2 = document.getElementById("answer2");
+let answer3 = document.getElementById("answer3");
+let answer4 = document.getElementById("answer4");
+
+// using flags to manipulate with answered questions
+let answered1 = false;
+let answered2 = false;
+let answered3 = false;
+let answered4 = false;
 
 // ! categories
 window.addEventListener("load", getCategories(api_categories));
@@ -44,13 +63,14 @@ async function getCategories(api_categories) {
 async function getQuestions(api) {
   await fetch(api)
     .then((res) => {
+      loader.style.display = "block";
       return res.json();
     })
     .then((data) => {
       console.log(data["results"]);
-      loader.style.display = "block";
+      loader.style.display = "none";
       welcome.style.display = "none";
-      // for (let i = 0; i < data["results"].length; i++) {}
+      startGame(data["results"]);
     })
     .catch((err) => {
       errCategories.style.display = "block";
@@ -83,3 +103,111 @@ start.addEventListener("click", (e) => {
 
   startLayout.style.display = "none";
 });
+
+// checking answers
+document.getElementById("a1").onclick = function () {
+  answered1 = true;
+  checkAnswer();
+};
+document.getElementById("a2").onclick = function () {
+  answered2 = true;
+  checkAnswer();
+};
+document.getElementById("a3").onclick = function () {
+  answered3 = true;
+  checkAnswer();
+};
+document.getElementById("a4").onclick = function () {
+  answered4 = true;
+  checkAnswer();
+};
+
+// shuffle array
+function shuffle(arr) {
+  let curr = arr.length;
+  let random;
+  while (curr != 0) {
+    random = Math.floor(Math.random() * curr);
+    curr--;
+    [arr[curr], arr[random]] = [arr[random], arr[curr]];
+  }
+
+  return arr;
+}
+
+// game start
+function startGame(q) {
+  questionsArr = q;
+  questions.style.display = "block";
+  displayQuestion(questionsArr);
+}
+
+// display questions
+function displayQuestion(questionsArr) {
+  questionText = questionsArr[currentQuestionNumber]["question"];
+  correctAnswer = questionsArr[currentQuestionNumber]["correct_answer"];
+  incorrectAnswers = questionsArr[currentQuestionNumber]["incorrect_answers"];
+  answers = [];
+  answers.push(correctAnswer);
+  for (let i = 0; i < 3; i++) {
+    answers.push(incorrectAnswers[i]);
+  }
+  answers = shuffle(answers);
+  arrAnsw.push(answers);
+  document.getElementById("question").innerHTML = questionText;
+  answer1.innerHTML = answers[0];
+  answer2.innerHTML = answers[1];
+  answer3.innerHTML = answers[2];
+  answer4.innerHTML = answers[3];
+
+  loader.innerHTML = `<strong class="text-white text-center"> Completed ${currentQuestionNumber}/${number.value}</strong>
+ `;
+}
+
+function checkAnswer() {
+  if (answered1 == true) {
+    if (answers[0] === questionsArr[currentQuestionNumber]["correct_answer"]) {
+      score++;
+    }
+    answered1 = false;
+    answersSubmitted.push(0);
+    displayNext();
+  } else if (answered2 == true) {
+    if (answers[1] === questionsArr[currentQuestionNumber]["correct_answer"]) {
+      score++;
+    }
+    answered2 = false;
+    answersSubmitted.push(1);
+    displayNext();
+  } else if (answered3 == true) {
+    if (answers[2] === questionsArr[currentQuestionNumber]["correct_answer"]) {
+      score++;
+    }
+    answered3 = false;
+    answersSubmitted.push(2);
+    displayNext();
+  } else if (answered4 == true) {
+    if (answers[3] === questionsArr[currentQuestionNumber]["correct_answer"]) {
+      score++;
+    }
+    answered4 = false;
+    answersSubmitted.push(3);
+    displayNext();
+  }
+}
+
+// displaying next question using hashchange
+function displayNext() {
+  if (currentQuestionNumber == parseInt(number.value) - 1) {
+    gameOver();
+  } else {
+    currentQuestionNumber++;
+    displayQuestion(questionsArr);
+  }
+}
+
+// check if the game is over
+function gameOver() {
+  questions.style.display = "none";
+  loader.innerHTML = `<strong class="text-white text-center"> Your score ${score}</strong>`;
+}
