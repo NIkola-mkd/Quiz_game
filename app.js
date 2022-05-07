@@ -16,6 +16,7 @@ let welcome = document.getElementById("welcome");
 let startLayout = document.getElementById("startLayout");
 let loader = document.getElementById("loader");
 let questions = document.getElementById("questions");
+let history = document.getElementById("history");
 
 // score
 let score = 0;
@@ -63,16 +64,15 @@ async function getCategories(api_categories) {
 async function getQuestions(api) {
   await fetch(api)
     .then((res) => {
-      loader.style.display = "block";
       return res.json();
     })
     .then((data) => {
-      console.log(data["results"]);
-      loader.style.display = "none";
+      loader.style.display = "block";
       welcome.style.display = "none";
       startGame(data["results"]);
     })
     .catch((err) => {
+      questions.style.display = "none";
       errCategories.style.display = "block";
     });
 }
@@ -208,6 +208,54 @@ function displayNext() {
 
 // check if the game is over
 function gameOver() {
+  var currentdate = new Date();
+  localStorage.setItem(
+    currentdate,
+    JSON.stringify(
+      `<ul class="list-group list-group">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-start"
+              >
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"></div>
+                 ${"Number of questions: " + number.value}
+                 <br>
+                 ${
+                   "Category: " +
+                   selectCategory.options[selectCategory.selectedIndex].text
+                 }
+                 <br>
+                 ${
+                   "Difficulty: " +
+                   difficulty.options[difficulty.selectedIndex].text
+                 }
+                </div>
+                <span class="badge bg-primary rounded-pill">${score}</span>
+              </li>
+            </ul>`
+    )
+  );
   questions.style.display = "none";
   loader.innerHTML = `<strong class="text-white text-center"> Your score ${score}</strong>`;
+}
+
+const items = { ...localStorage };
+
+function allStorage() {
+  var values = [],
+    keys = Object.keys(localStorage),
+    i = keys.length;
+
+  while (i--) {
+    values.push(localStorage.getItem(keys[i]));
+  }
+
+  return values;
+}
+
+let historyArr = allStorage(items);
+console.log(historyArr);
+
+for (let i = 0; i < historyArr.length; i++) {
+  history.innerHTML += JSON.parse(historyArr[i]);
 }
